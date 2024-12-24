@@ -1,4 +1,4 @@
-/* 
+/*
 2o Trabalho de Métodos Numéricos I - Sistemas de Equações
 Systems of Equations - Numeric Methods I 2023.2- 2nd Project
 */
@@ -8,139 +8,43 @@ Systems of Equations - Numeric Methods I 2023.2- 2nd Project
 #include <map>
 #include <string>
 #include <vector>
+#include "utils.h"
 
 using namespace std;
 
 const int MAXIMO_ITERACOES = 100;
 const double Lim = 0.4;
 
-// ------------------- Funções auxiliares -------------------
-
-void imprime_matriz(vector<vector<double>> &M, int n) {
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < n; ++j) {
-      cout << M[i][j] << " ";
-    }
-    cout << endl;
-  }
-  cout << endl;
-}
-
-// Imprimir matriz para a tabela com a linha separadora
-void imprime_matriz2(vector<vector<double>> &M, int n) {
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < n; ++j) {
-        if (j == 0) {
-            cout << "| " << M[i][j] << " ";
-        }
-        else {
-            cout << M[i][j] << " ";
-        }
-    }
-    cout << endl;
-  }
-}
-
-void imprime_e_copia_matriz(vector<vector<double>> &M,
-                            vector<vector<double>> &M_copia, int n) {
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < n; ++j) {
-      cout << M[i][j] << " ";
-      M_copia[i][j] = M[i][j];
-    }
-    cout << endl;
-  }
-  cout << endl;
-}
-
-void imprime_e_copia_vetor(vector<double> &v, vector<double> &v_copia, int n) {
-  for (int i = 0; i < n; ++i) {
-    cout << v[i] << " ";
-    v_copia[i] = v[i];
-  }
-  cout << endl << endl;
-}
-
-void imprime_vetor(vector<double> &v, int n) {
-  for (int i = 0; i < n; ++i) {
-    cout << v[i] << " ";
-  }
-  cout << endl << endl;
-}
-
-bool imprime_resultado_final_com_limite(vector<double> &resultado, int n) {
-  bool explodiu = false;
-  for (int i = 0; i < n; ++i) {
-    if (abs(resultado[i]) > Lim) {
-      cout << "d" << i << " = " << resultado[i] << " passou do limite de "
-           << Lim << "cm" << endl;
-      explodiu = true;
-    } else
-      cout << "d" << i << " = " << resultado[i] << " não passou do limite de "
-           << Lim << "cm" << endl;
-  }
-  cout << endl;
-
-  return explodiu;
-}
-
-void imprime_conclusao(bool explodiu, string metodo) {
-  cout << "Pelo método de " << metodo << ", ";
-  if (explodiu) {
-    cout << "Sérios danos ocorreram e um problema gigantesco aconteceu."
-         << endl;
-  } else {
-    cout << "Nenhum dano aconteceu." << endl;
-  }
-}
-
-void cria_matriz(vector<vector<double>> &A, int n) {
-  cout << "Digite os elementos da matriz:" << endl;
-
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < n; ++j) {
-      cout << "Matriz[" << i + 1 << "][" << j + 1 << "]: ";
-      cin >> A[i][j];
-    }
-  }
-}
-
-vector<double> multiplica_matriz_por_vetor(const vector<vector<double>> &matrix,
-                                           const vector<double> &vec, int n) {
-  vector<double> result(n, 0);
-
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
-      result[i] += matrix[i][j] * vec[j];
-    }
-  }
-
-  return result;
-}
-
 // ------------------- Funções Principais -------------------
 
-vector<vector<double>> calcula_inversa(int n, vector<vector<double>> A) {
+vector<vector<double>> calcula_inversa(int n, vector<vector<double>> A)
+{
   // Criar a matriz identidade I
   vector<vector<double>> I(n, vector<double>(n, 0));
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i < n; i++)
+  {
     I[i][i] = 1;
   }
 
   // Aplicar o método de Gauss-Jordan
-  for (int i = 0; i < n; i++) {
+  for (int i = 0; i < n; i++)
+  {
     // Tornar o elemento A[i][i] igual a 1 e ajustar a matriz I
     double diag = A[i][i];
-    for (int j = 0; j < n; j++) {
+    for (int j = 0; j < n; j++)
+    {
       A[i][j] /= diag;
       I[i][j] /= diag;
     }
 
     // Tornar os outros elementos da coluna i iguais a 0
-    for (int k = 0; k < n; k++) {
-      if (k != i) {
+    for (int k = 0; k < n; k++)
+    {
+      if (k != i)
+      {
         double factor = A[k][i];
-        for (int j = 0; j < n; j++) {
+        for (int j = 0; j < n; j++)
+        {
           A[k][j] -= A[i][j] * factor;
           I[k][j] -= I[i][j] * factor;
         }
@@ -151,11 +55,13 @@ vector<vector<double>> calcula_inversa(int n, vector<vector<double>> A) {
   return I;
 }
 
-double calcula_norma(int n, vector<double> &x, vector<double> &v) {
+double calcula_norma(int n, vector<double> &x, vector<double> &v)
+{
   double normaNum = 0.0;
   double normaDen = 0.0;
 
-  for (int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i)
+  {
     double t = abs(v[i] - x[i]);
     if (t > normaNum)
       normaNum = t;
@@ -172,14 +78,18 @@ double calcula_norma(int n, vector<double> &x, vector<double> &v) {
 
 // Função para o método de Gauss-Jacobi
 vector<double> gauss_jacobi(int n, vector<vector<double>> &A, vector<double> &d,
-                            vector<double> &v, double epsilon, int iterMax) {
+                            vector<double> &v, double epsilon, int iterMax)
+{
   // Construção da matriz e do vetor de iterações
   vector<double> x(n, 0.0);
   // Vetor de matrizes que armazena todos os A's de todas as iterações
-  for (int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i)
+  {
     double r = 1.0 / A[i][i];
-    for (int j = 0; j < n; ++j) {
-      if (i != j) {
+    for (int j = 0; j < n; ++j)
+    {
+      if (i != j)
+      {
         A[i][j] *= r;
       }
     }
@@ -190,12 +100,16 @@ vector<double> gauss_jacobi(int n, vector<vector<double>> &A, vector<double> &d,
 
   int k = 0;
   // Iterações de Jacobi
-  while (true) {
+  while (true)
+  {
     ++k;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
       double soma = 0.0;
-      for (int j = 0; j < n; ++j) {
-        if (i != j) {
+      for (int j = 0; j < n; ++j)
+      {
+        if (i != j)
+        {
           soma += A[i][j] * x[j];
         }
       }
@@ -207,13 +121,15 @@ vector<double> gauss_jacobi(int n, vector<vector<double>> &A, vector<double> &d,
 
     // Imprime os resultados
     cout << "Iteração " << k << ": ";
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
       cout << x[i] << " ";
     }
 
     cout << "Norma: " << norma << endl;
     // Verifica o critério de parada
-    if (norma < epsilon || k >= iterMax) {
+    if (norma < epsilon || k >= iterMax)
+    {
       break;
     }
   }
@@ -224,18 +140,23 @@ vector<double> gauss_jacobi(int n, vector<vector<double>> &A, vector<double> &d,
 
 // Função para o método de Gauss-Seidel
 vector<double> gauss_seidel(int n, vector<vector<double>> &A, vector<double> &d,
-                            vector<double> &v, double epsilon, int iterMax) {
+                            vector<double> &v, double epsilon, int iterMax)
+{
   // Construção da matriz e do vetor de iterações
   vector<double> x(n, 0.0);
 
   int k = 0;
   // Iterações de Gauss-Seidel
-  while (true) {
+  while (true)
+  {
     ++k;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
       double soma = 0.0;
-      for (int j = 0; j < n; ++j) {
-        if (i != j) {
+      for (int j = 0; j < n; ++j)
+      {
+        if (i != j)
+        {
           soma += A[i][j] * x[j];
         }
       }
@@ -248,13 +169,15 @@ vector<double> gauss_seidel(int n, vector<vector<double>> &A, vector<double> &d,
 
     // Imprime os resultados
     cout << "Iteração " << k << ": ";
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
       cout << x[i] << " ";
     }
     cout << "Norma: " << norma << endl;
 
     // Verifica o critério de parada
-    if (norma <= epsilon || k >= iterMax) {
+    if (norma <= epsilon || k >= iterMax)
+    {
       break;
     }
   }
@@ -262,49 +185,56 @@ vector<double> gauss_seidel(int n, vector<vector<double>> &A, vector<double> &d,
 }
 
 // Função para imprimir o quadro reposta
-void quadro_resposta(int n, int q, vector<vector<vector<double>>> &lista_matrizes, vector<vector<double>> &lista_jacobis, vector<vector<double>> &lista_seidels) { 
-    for (int curr_q = 0; curr_q < q; curr_q++) {
-        cout << "\n|--------------------------------------------------------------------------------";
-        cout << "\n| Q = " << curr_q+1 << ": \n"; // Para q valores
-        vector<vector<double>> A_curr = lista_matrizes[curr_q];
-        cout << "|================================================================================ \n";
-        // matriz do exemplo 'q'  
-        cout << "| Matriz A: \n";
-        imprime_matriz2(A_curr, n);  
+void quadro_resposta(int n, int q, vector<vector<vector<double>>> &lista_matrizes, vector<vector<double>> &lista_jacobis, vector<vector<double>> &lista_seidels)
+{
+  for (int curr_q = 0; curr_q < q; curr_q++)
+  {
+    cout << "\n|--------------------------------------------------------------------------------";
+    cout << "\n| Q = " << curr_q + 1 << ": \n"; // Para q valores
+    vector<vector<double>> A_curr = lista_matrizes[curr_q];
+    cout << "|================================================================================ \n";
+    // matriz do exemplo 'q'
+    cout << "| Matriz A: \n";
+    imprime_matriz2(A_curr, n);
 
-        cout << "|================================================================================ \n";
+    cout << "|================================================================================ \n";
 
-        cout << "| Método de Gauss-Jacobi: \n";
-        cout << "| Vetor b: \n";
-        for (int i = 0; i < n; ++i) {
-            if (i == 0) {
-                cout << "| " << lista_jacobis[curr_q][i] << " ";
-            }
-            else {
-                cout << lista_jacobis[curr_q][i] << " ";
-            }
-
-        } 
-
-        cout << "\n|================================================================================ \n";
-
-        cout << "| Método de Gauss-Seidel: \n";
-        cout << "| Vetor b: \n";
-        for (int i = 0; i < n; ++i) {
-            if (i == 0) {
-                cout << "| " << lista_seidels[curr_q][i] << " "; 
-            }
-            else {
-                cout << lista_seidels[curr_q][i] << " "; 
-            }
-        }
-
-        cout << "\n|================================================================================ \n";
-
+    cout << "| Método de Gauss-Jacobi: \n";
+    cout << "| Vetor b: \n";
+    for (int i = 0; i < n; ++i)
+    {
+      if (i == 0)
+      {
+        cout << "| " << lista_jacobis[curr_q][i] << " ";
+      }
+      else
+      {
+        cout << lista_jacobis[curr_q][i] << " ";
+      }
     }
-} 
 
-void item_e() {
+    cout << "\n|================================================================================ \n";
+
+    cout << "| Método de Gauss-Seidel: \n";
+    cout << "| Vetor b: \n";
+    for (int i = 0; i < n; ++i)
+    {
+      if (i == 0)
+      {
+        cout << "| " << lista_seidels[curr_q][i] << " ";
+      }
+      else
+      {
+        cout << lista_seidels[curr_q][i] << " ";
+      }
+    }
+
+    cout << "\n|================================================================================ \n";
+  }
+}
+
+void item_e()
+{
   cout << endl
        << "e) Analisar o que vai acontecer nesse fenômeno, para o sistema "
           "mencionado abaixo"
@@ -325,7 +255,8 @@ void item_e() {
   cout << "Digite o vetor das incognitas v0:\n";
   vector<double> v(n);
   vector<double> v_copia(n);
-  for (int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i)
+  {
     cout << "v[" << i + 1 << "]: ";
     cin >> v[i];
   }
@@ -380,20 +311,22 @@ void item_e() {
 
   // ------------- Conclusão -------------
 
-  cout << "Conclusão" << endl << endl;
+  cout << "Conclusão" << endl
+       << endl;
 
   imprime_conclusao(gj_explodiu, "Gauss-Jacobi");
   imprime_conclusao(gs_explodiu, "Gauss-Seidel");
 }
 
-int main() {
+int main()
+{
   int n, q;
   double epsilon;
 
-  cout << "2o Trabalho de Métodos Numéricos I - Raízes de Equações" << endl;
+  cout << "2o Trabalho de Metodos Numéricos I - Raizes de Equacoes" << endl;
   cout << "Tema2:" << endl;
   cout << "a) Implementar algoritmo para calcular A^{-1} e depois d pelo "
-          "método de Gauss-Jacobi."
+          "metodo de Gauss-Jacobi."
        << endl
        << endl;
 
@@ -416,13 +349,14 @@ int main() {
 
   vector<vector<double>> lista_seidels(q, vector<double>(n));
 
-  for (int i = 0; i < q; i++) {
+  for (int i = 0; i < q; i++)
+  {
     vector<vector<double>> A(n, vector<double>(n));
     vector<vector<double>> A_copia(n, vector<double>(n));
     vector<vector<double>> A_inversa(n, vector<double>(n));
 
     cout << "Digite a Matriz A :" << endl;
-    cria_matriz(A, n);  
+    cria_matriz(A, n);
 
     lista_matrizes[i] = A;
 
@@ -435,7 +369,8 @@ int main() {
 
     lista_ds[i] = d;
 
-    for (int k = 0; k < n; ++k) {
+    for (int k = 0; k < n; ++k)
+    {
       cout << "d[" << k + 1 << "]: ";
       cin >> d[k];
     }
@@ -445,7 +380,8 @@ int main() {
     cout << "Digite o vetor das incognitas v0:" << endl;
     vector<double> v(n); // Alteração aqui, vetor unidimensional
     vector<double> v_copia(n);
-    for (int l = 0; l < n; ++l) {
+    for (int l = 0; l < n; ++l)
+    {
       cout << "v[" << l + 1 << "]: ";
       cin >> v[l];
     }
@@ -478,13 +414,14 @@ int main() {
 
     // ------------- Gauss Jacobi -------------
 
-    cout << "Para o método de Gauss Jacobi:" << endl;
+    cout << "Para o metodo de Gauss Jacobi:" << endl;
     vector<double> resultado_jacobi =
         gauss_jacobi(n, A, d, v, epsilon, MAXIMO_ITERACOES);
 
     lista_jacobis[i] = resultado_jacobi;
 
-    cout << endl << "Resultado final: ";
+    cout << endl
+         << "Resultado final: ";
 
     cout << endl;
     imprime_resultado_final_com_limite(resultado_jacobi, n);
@@ -492,20 +429,21 @@ int main() {
 
     // ------------- Gauss Seidel -------------
 
-    cout << "Para o método de Gauss Seidel:" << endl;
+    cout << "Para o metodo de Gauss Seidel:" << endl;
     vector<double> resultado_seidel =
         gauss_seidel(n, A_copia, d_copia, v_copia, epsilon, MAXIMO_ITERACOES);
 
     lista_seidels[i] = resultado_seidel;
 
-    cout << endl << "Resultado final: ";
+    cout << endl
+         << "Resultado final: ";
 
     cout << endl;
     imprime_resultado_final_com_limite(resultado_seidel, n);
     cout << endl;
   }
-  
-  cout << "d) Fornecer um quadro resposta para cada método, variando os "
+
+  cout << "d) Fornecer um quadro resposta para cada metodo, variando os "
           "valores de [A] e de {b}"
        << endl;
   quadro_resposta(n, q, lista_matrizes, lista_jacobis, lista_seidels);
